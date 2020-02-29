@@ -1,0 +1,51 @@
+﻿@using System.Web.Optimization
+@model EPiServer.Reference.Commerce.Site.Features.RecDemo.ViewModels.RecDemoViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Recommendations Testing</title>
+    @Styles.Render("~/styles/bundled")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+</head>
+<body>
+    <div class="container">
+        @{ Html.RenderAction("Index", "Navigation"); }
+        <div class="h2">Testing Product Recommendations</div>
+        <div>
+            @Html.PropertyFor(m => m.RecDemoPage.MainBody)
+        </div>
+        <div class="row">
+            <div class="h3">Home Page Recommendations</div>
+            <div class="col-xs-2">
+                @foreach (var rec in Model.HomeRecommendations)
+                {
+                    <div class="row text-center">@rec.Title</div>
+                    <div class="product-row__item__image">
+                        <img src="@rec.ImageUrl" class="img-responsive" />
+                    </div>
+                    <div class="row text-center">Retail: @rec.UnitPrice</div>
+                    if (rec.SalePrice != null)
+                    {
+                        <div class="row text-center">Sale: @rec.SalePrice</div>
+                    }
+                    <div class="row">
+                        @Ajax.ActionLink("Get Product Recommendations", "ProductRecommendations", new { rec.Code, rec.recommendationId }, new AjaxOptions { UpdateTargetId = "productRecs" }, new { @class = "btn btn-primary" })
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div id="productRecs"></div>
+        </div>
+    </div>
+</body>
+</html>

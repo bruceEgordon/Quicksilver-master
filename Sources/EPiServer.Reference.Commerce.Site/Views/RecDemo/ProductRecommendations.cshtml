@@ -1,0 +1,52 @@
+﻿@model EPiServer.Reference.Commerce.Site.Features.RecDemo.ViewModels.RecDemoViewModel
+
+<div class="row">
+    <div class="h3">Product Recommendations</div>
+    <div>Refrerring Product Code: @Model.CodeValue</div>
+</div>
+<div class="row">
+    <div class="col-xs-6">
+        <div class="h4">Product Alternative Recommendations</div>
+        <div class="col-xs-3">
+            @foreach (var rec in Model.ProductAltRecommendations)
+            {
+                <div class="row " style="border: 2px solid grey; margin-bottom: 2px">
+                    <div class="text-center">@rec.Title</div>
+                    <div class="product-row__item__image">
+                        <img src="@rec.ImageUrl" class="img-responsive" />
+                    </div>
+                    <div class="row text-center">Retail: @rec.UnitPrice</div>
+                    @if (rec.SalePrice != null)
+                    {
+                        <div class="row text-center">Sale: @rec.SalePrice</div>
+                    }
+                    <div class="row">
+                        @Html.ActionLink("Add to cart", "FakeCart", new { rec.Code, rec.recommendationId }, new { @class = "btn btn-primary" })
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-xs-6">
+        <div class="h4">Product Cross-Sell Recommendations</div>
+        <div class="col-xs-3">
+            @foreach (var rec in Model.ProductCrossSellRecommendations)
+            {
+                <div class="row " style="border: 2px solid grey; margin-bottom: 2px">
+                    <div class="text-center">@rec.Title</div>
+                    <div class="product-row__item__image">
+                        <img src="@rec.ImageUrl" class="img-responsive" />
+                    </div>
+                    <div class="row text-center">Retail: @rec.UnitPrice</div>
+                    @if (rec.SalePrice != null)
+                    {
+                        <div class="row text-center">Sale: @rec.SalePrice</div>
+                    }
+                    <div class="row">
+                        @Html.ActionLink("Add to cart", "FakeCArt", new { rec.Code, rec.recommendationId }, new { @class = "btn btn-primary" })
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

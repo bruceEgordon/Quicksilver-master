@@ -1,0 +1,140 @@
+﻿@using EPiServer.Commerce.Marketing
+@using EPiServer.Reference.Commerce.Site.Features.Start.ViewModels
+@using EPiServer.Tracking.Core
+@using EPiServer.Reference.Commerce.Site
+@model StartPageViewModel
+@{
+    IEnumerable<PromotionViewModel> promotions = Model.Promotions;
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            @if (promotions.Any())
+            {
+                <div id="promotion-carousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner" role="listbox">
+                        @for (var i = 0; i < promotions.Count(); i++)
+                        {
+                            <div class="item" data-slide-number="@i">
+                                <img src="@Url.ContentUrl(promotions.ElementAt(i).BannerImage)" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            @Html.PropertyFor(x => x.StartPage.MainBody)
+        </div>
+    </div>
+</div>
+@foreach (var promotion in promotions)
+{
+    <div class="container-fluid product-row">
+        <div class="row">
+            <div>
+                <h2>@promotion.Name</h2>
+                @if (promotion.SelectionType == CatalogItemSelectionType.All)
+                {
+                    <span class="product-brand">@Html.Translate("/StartPage/Promotion/AllItems")</span><br />
+                }
+                @foreach (var promotionItem in promotion.Items)
+                {
+                    <div class="jsProductTile product-row__tile col-xs-12 col-sm-6 col-lg-4">@{Html.RenderContentData(promotionItem, false);}</div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@if (Functions.ShouldRenderTrackingSection())
+{
+    @section Tracking{
+        <script>
+            $(document).ready(function () {
+                var homeTrackingData = TrackingDataFactory.createHomeTrackingData();
+                epiRecommendations.track(homeTrackingData, null, 'web', Recommendations.render, { sectionMappings: [{ area: "homeWidget", selector: ".recommendations-right", numberOfItemsToRender: 6 }] })
+            });
+        </script>
+    }
+}
+
+@section LeftMarginRecommendations {
+    @{ 
+        Html.RenderAction("Index", "Recommendations", new { recommendations = ViewData["recs"] });
+     }
+}
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <a data-toggle="collapse"
+                   href="#collapseDiagnostics">Diagnostics</a>
+            </h3>
+        </div>
+        <div id="collapseDiagnostics" class="panel-collapse collapse">
+            <div class="panel-body">
+                @if (ViewData["widgets"] != null)
+                {
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h4>Widgets</h4>
+                                <table class="table table-bordered table-condensed table-responsive">
+                                    <tr>
+                                        <th>Scope</th>
+                                        <th>Page</th>
+                                        <th>WidgetName</th>
+                                        <th>Active</th>
+                                    </tr>
+                                    @foreach (var widget in ViewData["widgets"] as IEnumerable<Tuple<string, string, string, bool>>)
+                                    {
+                                        <tr>
+                                            <td>@widget.Item1</td>
+                                            <td>@widget.Item2</td>
+                                            <td>@widget.Item3</td>
+                                            <td>@widget.Item4</td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (ViewData["interceptors"] != null)
+                {
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h4>Tracking Data Interceptors</h4>
+                                <table class="table table-bordered table-condensed table-responsive">
+                                    <tr>
+                                        <th>SortOrder</th>
+                                        <th>Type</th>
+                                        <th>Description</th>
+                                    </tr>
+                                    @foreach (var interceptor in ViewData["interceptors"] as IEnumerable<ITrackingDataInterceptor>)
+                                    {
+                                        <tr>
+                                            <td>@interceptor.SortOrder</td>
+                                            <td title="@interceptor.GetType().FullName">
+                                                @interceptor.GetType().Name
+                                            </td>
+                                            <td>
+                                                @if(TrainingExtensions.TrackingDataInterceptorDescriptions.ContainsKey(interceptor.GetType().FullName))
+                                                {
+                                                    <span>
+                                                        @TrainingExtensions.TrackingDataInterceptorDescriptions[interceptor.GetType().FullName]
+                                                    </span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,12 @@
+﻿@model EPiServer.Reference.Commerce.Site.Features.Recommendations.ViewModels.RecommendationsViewModel
+
+    <div class="alert alert-warning">
+        <div>Server-side</div>
+        @foreach (var product in Model.Products)
+        {
+            <div class="jsProductTile product-row__tile" data-recommendation-id="@product.RecommendationId">
+                @Html.Partial("_Product", product.TileViewModel)
+            </div>
+        }
+    </div>
+
