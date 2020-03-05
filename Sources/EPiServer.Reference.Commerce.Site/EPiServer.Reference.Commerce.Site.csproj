@@ -842,6 +842,7 @@
     <Content Include="Views\RecDemo\Index.cshtml" />
     <Content Include="Views\RecDemo\ProductRecommendations.cshtml" />
     <Content Include="Views\RecDemo\FakeCart.cshtml" />
+    <Content Include="personalization-workshop-exercise-manual.docx" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

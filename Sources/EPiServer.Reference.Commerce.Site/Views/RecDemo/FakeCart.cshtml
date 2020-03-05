@@ -64,7 +64,6 @@
                 basketTrackingData["recommendationId"] = recommendationId;
             } 
             basketTrackingData["skipRecommendations"] = false;
-            //var productTrackingData = TrackingDataFactory.createProductTrackingData(refCode);
             epiRecommendations.track(
                 basketTrackingData,
                 null,
@@ -76,17 +75,6 @@
                     ]
                 }
             );
-            //epiRecommendations.track(
-            //    productTrackingData,
-            //    null,
-            //    'web',
-            //    Recommendations.render,
-            //    {
-            //        sectionMappings: [
-            //            { area: "productAlternativesWidget", selector: ".recommend-stuff" }
-            //        ]
-            //    }
-            //);
         });
     </script>
 </body>
